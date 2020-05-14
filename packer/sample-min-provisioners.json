@@ -1,0 +1,72 @@
+{
+    "variables": {
+      "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
+      "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
+      "target_ami_name": "{{env `TARGET_AMI_NAME_SAMPLE`}}",
+      "do_api_token": "{{env `DO_API_TOKEN`}}",
+      "tmpdir_name": "/sampledir/",
+      "region": "us-east-1"
+    },
+    "builders": [
+      {
+        "access_key": "{{user `aws_access_key`}}",
+        "ami_name": "{{user `target_ami_name`}}-{{timestamp}}",
+        "instance_type": "t2.micro",
+        "region": "us-east-1",
+        "secret_key": "{{user `aws_secret_key`}}",
+        "source_ami_filter": {
+          "filters": {
+            "virtualization-type": "hvm",
+            "name": "ubuntu/images/*ubuntu-focal-20.04-amd64-server-*",
+            "root-device-type": "ebs"
+          },
+          "owners": ["099720109477"],
+          "most_recent": true
+        },
+        "ssh_username": "ubuntu",
+        "type": "amazon-ebs"
+      },
+      {
+        "type": "digitalocean",
+        "api_token": "{{user `do_api_token`}}",
+        "image": "ubuntu-20-04-x64",
+        "region": "nyc3",
+        "size": "512mb",
+        "ssh_username": "root"
+      },
+      {
+        "type": "docker",
+        "image": "ubuntu:20.04",
+        "export_path": "image.tar"
+      }
+    ],
+    "provisioners": [
+      {
+        "type": "shell",
+        "inline": ["mkdir -pv {{user `tmpdir_name`}} || sudo mkdir -m 777 -pv {{user `tmpdir_name`}}"]
+      },
+      {
+        "type": "file",
+        "source": "./welcome.txt",
+        "destination": "{{user `tmpdir_name`}}"
+      },
+      {
+        "type": "shell",
+        "inline": ["ls -al {{user `tmpdir_name`}}", "sleep 10 && ls {{user `tmpdir_name`}} && cat {{user `tmpdir_name`}}welcome.txt"]
+      },
+      {
+        "type": "shell",
+        "script": "./example.sh"
+      },
+      {
+        "type": "shell",
+        "inline": [
+          "sleep 30",
+          "[ $PACKER_BUILDER_TYPE = 'docker' ] && ( apt update -qq && apt install -y -qq sudo )",
+          "sudo apt-get update -qq",
+          "sudo apt-get install -y -qq redis-server"
+        ]
+      }
+    ]
+  }
+  
