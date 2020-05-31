@@ -4,6 +4,8 @@ variable "project_name" {
 variable "instance_type" {
     default = "t3a.medium"
 }
+variable "dns_zone" {}
+variable "dns_zone_id" {}
 # use default region from provider.tf
 
 data "aws_ami" "ubuntu_lts" {
@@ -87,4 +89,19 @@ resource "aws_security_group" "stal_web_sg" {
   tags = {
     Name = "stal_web_sg"
   }
+}
+
+# # assuming we're creating the main DNS zone manually
+# # and keeping its id in terraform.tfvars
+# data "aws_route53_zone" "stal_zone" {
+#   name         = var.dns_zone
+#   private_zone = false 
+# }
+
+resource "aws_route53_record" "fqdn" {
+  zone_id = var.dns_zone_id
+  name    = "${var.project_name}.${var.dns_zone}"
+  type    = "CNAME"
+  ttl     = "300"
+  records = [aws_instance.stal_instance.public_dns]
 }
