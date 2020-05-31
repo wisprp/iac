@@ -98,6 +98,8 @@ resource "aws_security_group" "stal_web_sg" {
 #   private_zone = false 
 # }
 
+# TODO: Make custom subdomain conditional
+# if not provided, use AWS Domain
 resource "aws_route53_record" "fqdn" {
   zone_id = var.dns_zone_id
   name    = "${var.project_name}.${var.dns_zone}"
