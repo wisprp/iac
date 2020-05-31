@@ -101,6 +101,23 @@ resource "aws_internet_gateway" "stal_gw" {
   }
 }
 
+resource "aws_route_table" "stal_route_table" {
+  vpc_id = aws_vpc.stal_vpc.id
+
+  route {
+      cidr_block = "0.0.0.0/0"
+      gateway_id = aws_internet_gateway.stal_gw.id
+  }
+  tags           = {
+      Name = "stal_route_table"
+  }
+}
+
+resource "aws_route_table_association" "stal_subnet_association" {
+  subnet_id      = aws_subnet.stal_subnet.id
+  route_table_id = aws_route_table.stal_route_table.id
+}
+
 # # assuming we're creating the main DNS zone manually
 # # and keeping its id in terraform.tfvars
 # data "aws_route53_zone" "stal_zone" {
