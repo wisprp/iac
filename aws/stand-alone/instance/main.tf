@@ -29,12 +29,14 @@ resource "aws_instance" "stal_instance" {
   instance_type             = var.instance_type
   subnet_id                 = aws_subnet.stal_subnet.id
   vpc_security_group_ids    = [aws_security_group.stal_web_sg.id]
-  
+  user_data                 = file("startup_scripts/${var.project_name}.sh")
   associate_public_ip_address = true
 
   tags                      = {
       Name = "stal_${var.project_name}"
   }
+
+  depends_on = [aws_internet_gateway.stal_gw]
 }
 
 # we need to have vpc and subnet for launching intances in vpc
@@ -88,6 +90,14 @@ resource "aws_security_group" "stal_web_sg" {
 
   tags = {
     Name = "stal_web_sg"
+  }
+}
+
+resource "aws_internet_gateway" "stal_gw" {
+  vpc_id = aws_vpc.stal_vpc.id
+
+  tags = {
+    Name = "stal_gw"
   }
 }
 
