@@ -1,6 +1,13 @@
 Set of script to set up and run stand alone dev instances on AWS 
 More detailed description TBA
 
+Directory structure
+
+* instance/ - instanse setup definition
+* startup_scripts/ - user-data startup scripts, must match project name
+* projects.tf - list of projects modules
+
+
 
 Notes:
 AWS credentilas via `export` profile
