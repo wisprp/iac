@@ -4,6 +4,9 @@ variable "dns_zone" {
 variable "dns_zone_id" {
     type = string
 }
+variable "public_key" {
+    type = string
+}
 
 module "sample_project" {
   source              = "./instance"
@@ -12,4 +15,5 @@ module "sample_project" {
   # region              = "us-west-1" # in case if we need to use non-defau
   dns_zone            = var.dns_zone
   dns_zone_id         = var.dns_zone_id
+  public_key          = var.public_key
 }

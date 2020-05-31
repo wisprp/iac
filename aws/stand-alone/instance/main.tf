@@ -6,6 +6,7 @@ variable "instance_type" {
 }
 variable "dns_zone" {}
 variable "dns_zone_id" {}
+variable "public_key" {}
 # use default region from provider.tf
 
 data "aws_ami" "ubuntu_lts" {
@@ -30,6 +31,8 @@ resource "aws_instance" "stal_instance" {
   subnet_id                 = aws_subnet.stal_subnet.id
   vpc_security_group_ids    = [aws_security_group.stal_web_sg.id]
   user_data                 = file("startup_scripts/${var.project_name}.sh")
+  key_name                  = aws_key_pair.stal_pub_key.key_name
+
   associate_public_ip_address = true
 
   tags                      = {
@@ -77,6 +80,14 @@ resource "aws_security_group" "stal_web_sg" {
     description = "HTTPS from VPC"
     from_port   = 443
     to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+    ingress {
+    description = "Custom HTTP"
+    from_port   = 8080
+    to_port     = 8080
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -133,4 +144,9 @@ resource "aws_route53_record" "fqdn" {
   type    = "CNAME"
   ttl     = "300"
   records = [aws_instance.stal_instance.public_dns]
+}
+
+resource "aws_key_pair" "stal_pub_key" {
+  key_name   = "stal_pub_key"
+  public_key = "ssh-rsa ${var.public_key} stal_pub_key"
 }

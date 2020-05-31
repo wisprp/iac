@@ -14,6 +14,9 @@ AWS credentilas via `export` profile
 
 `dns_zone` and `dns_zone_id` defined as var in export with `TF_VAR_` prefix
 
+for `.env` public key has to be added in stripped format: 
+i.e. no ssh-rsa or commentary
+
 Simpliest way to export .env
 
 ``` export $(xargs < .env) ```
