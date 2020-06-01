@@ -29,4 +29,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 cd /opt
 curl https://codeload.github.com/visiblevc/wordpress-starter/tar.gz/master | tar -xz --strip 1 wordpress-starter-master/example
 cd /opt/example
+# adjust hostname settings
+PUB_HOSTNAME=$(curl -s http://169.254.169.254/latest/meta-data/public-hostname)
+sed -i /opt/example/docker-compose.yml -e "s|DB_NAME|SERVER_NAME\: ${PUB_HOSTNAME}\:8080\n            DB_NAME|1"
 docker-compose up -d
