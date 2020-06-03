@@ -147,6 +147,6 @@ resource "aws_route53_record" "fqdn" {
 }
 
 resource "aws_key_pair" "stal_pub_key" {
-  key_name   = "stal_pub_key"
+  key_name   = "stal_${var.project_name}_pub_key"
   public_key = "ssh-rsa ${var.public_key} stal_pub_key"
 }

@@ -1,2 +1,10 @@
 .terraform/
 .env 
+
+
+# own projet except samples
+startup_scripts/
+!startup_scripts/sample_project.sh
+
+# own projects
+projects.tf
