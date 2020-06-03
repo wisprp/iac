@@ -55,6 +55,7 @@ resource "aws_subnet" "stal_subnet" {
   # availability_zone = "us-west-1a"
 }
 
+# TODO: check more project specific SG options practices
 resource "aws_security_group" "stal_web_sg" {
   name        = "stal_web_sg"
   description = "Default web: 22, 80, 443"
