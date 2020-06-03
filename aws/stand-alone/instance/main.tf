@@ -68,7 +68,7 @@ resource "aws_security_group" "stal_web_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-    ingress {
+  ingress {
     description = "HTTP from VPC"
     from_port   = 80
     to_port     = 80
@@ -76,7 +76,7 @@ resource "aws_security_group" "stal_web_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-    ingress {
+  ingress {
     description = "HTTPS from VPC"
     from_port   = 443
     to_port     = 443
@@ -84,10 +84,18 @@ resource "aws_security_group" "stal_web_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-    ingress {
+  ingress {
     description = "Custom HTTP"
     from_port   = 8080
     to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Portainer port"
+    from_port   = 9999
+    to_port     = 9999
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
