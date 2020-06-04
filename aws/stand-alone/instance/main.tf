@@ -151,7 +151,7 @@ resource "aws_route53_record" "fqdn" {
   zone_id = var.dns_zone_id
   name    = "${var.project_name}.${var.dns_zone}"
   type    = "CNAME"
-  ttl     = "300"
+  ttl     = "5"
   records = [aws_instance.stal_instance.public_dns]
 }
 
