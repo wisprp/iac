@@ -8,3 +8,4 @@ startup_scripts/
 
 # own projects
 projects.tf
+project-*.tf
