@@ -4,6 +4,9 @@ variable "project_name" {
 variable "instance_type" {
     default = "t3a.medium"
 }
+variable "ebs_root_vol_size" {
+    default = 8
+}
 variable "dns_zone" {}
 variable "dns_zone_id" {}
 variable "public_key" {}
@@ -34,6 +37,13 @@ resource "aws_instance" "stal_instance" {
   key_name                  = aws_key_pair.stal_pub_key.key_name
 
   associate_public_ip_address = true
+
+  root_block_device {
+    delete_on_termination   = true
+    volume_type             = "gp2"
+    # device_name             = "ebs_stal_${var.project_name}_root"
+    volume_size             = var.ebs_root_vol_size
+  }
 
   tags                      = {
       Name = "stal_${var.project_name}"
