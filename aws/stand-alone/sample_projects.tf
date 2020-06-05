@@ -16,4 +16,5 @@ module "sample_project" {
   dns_zone            = var.dns_zone
   dns_zone_id         = var.dns_zone_id
   public_key          = var.public_key
+  ebs_root_vol_size   = 8
 }
